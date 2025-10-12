@@ -32,7 +32,7 @@ venv.bak/
 virtualenv/
 
 # User Data (artifacts)
-.ai_docs/
+ai_docs/
 tasks/
 plans/
 

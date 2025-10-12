@@ -23,20 +23,20 @@ orchestrator-toolkit>=1.0.0
 ```bash
 cd your-project/
 
-# Set the artifact directory (defaults to .ai_docs)
-export OTK_ARTIFACT_ROOT=.ai_docs
+# Set the artifact directory (defaults to ai_docs)
+export OTK_ARTIFACT_ROOT=ai_docs
 
 # Create your first task
 task-new "Implement user authentication" --owner Backend
 
 # View the created task
-cat .ai_docs/tasks/T-0001.md
+cat ai_docs/tasks/T-0001.md
 ```
 
 ### 3. Add to .gitignore
 
 ```bash
-echo ".ai_docs/" >> .gitignore
+echo "ai_docs/" >> .gitignore
 ```
 
 ## Real-World Example: Web Application
@@ -54,7 +54,7 @@ task-new "Write unit tests" --owner QA
 orchestrator-once
 
 # View generated plans
-ls .ai_docs/plans/
+ls ai_docs/plans/
 ```
 
 ## Integration with Claude Code
@@ -76,7 +76,7 @@ When working with Claude Code, you can ask it to:
 3. **Track progress**:
    ```
    You: "Update task T-0001 to in-progress"
-   Claude: *edits* .ai_docs/tasks/T-0001.md
+   Claude: *edits* ai_docs/tasks/T-0001.md
    ```
 
 ## Project Structure Example
@@ -85,7 +85,7 @@ After integration, your project might look like:
 
 ```
 your-project/
-├── .ai_docs/               # Task management (gitignored)
+├── ai_docs/               # Task management (gitignored)
 │   ├── tasks/
 │   │   ├── T-0001.md      # Database schema task
 │   │   ├── T-0002.md      # API endpoints task
@@ -97,7 +97,7 @@ your-project/
 │   ├── backend/
 │   ├── frontend/
 │   └── tests/
-├── .gitignore             # Includes .ai_docs/
+├── .gitignore             # Includes ai_docs/
 ├── requirements.txt       # Includes orchestrator-toolkit
 └── README.md
 ```
@@ -115,7 +115,7 @@ import os
 def create_feature_task(feature_name: str):
     """Create a task for a new feature."""
     # Ensure we're using the right directory
-    os.environ['OTK_ARTIFACT_ROOT'] = '.ai_docs'
+    os.environ['OTK_ARTIFACT_ROOT'] = 'ai_docs'
 
     # Create the task
     task_path = create_task(
@@ -198,19 +198,19 @@ pip install --upgrade --index-url https://test.pypi.org/simple/ \
             orchestrator-toolkit
 ```
 
-### Issue: Tasks not appearing in .ai_docs
+### Issue: Tasks not appearing in ai_docs
 ```bash
 # Check environment variable
 echo $OTK_ARTIFACT_ROOT
 
 # Set it explicitly
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 ```
 
 ### Issue: Permission denied
 ```bash
 # Ensure directory is writable
-chmod -R u+w .ai_docs/
+chmod -R u+w ai_docs/
 ```
 
 ## Support

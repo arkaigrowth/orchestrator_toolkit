@@ -68,10 +68,10 @@ pip install -e . --quiet
 echo -e "${GREEN}✅ Orchestrator Toolkit installed${NC}"
 echo
 
-# Create .ai_docs directory
-if [ ! -d ".ai_docs" ]; then
-    echo "📁 Creating .ai_docs directory..."
-    mkdir -p .ai_docs/tasks .ai_docs/plans
+# Create ai_docs directory
+if [ ! -d "ai_docs" ]; then
+    echo "📁 Creating ai_docs directory..."
+    mkdir -p ai_docs/tasks ai_docs/plans
     echo -e "${GREEN}✅ Artifact directories created${NC}"
 fi
 
@@ -80,7 +80,7 @@ if command -v direnv &> /dev/null; then
     echo "🔧 Detected direnv. Creating .envrc file..."
     cat > .envrc << 'EOF'
 source .otk-venv/bin/activate
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 EOF
     echo -e "${YELLOW}Run 'direnv allow' to auto-activate this environment${NC}"
 else
@@ -91,9 +91,9 @@ fi
 cat > activate_otk.sh << 'EOF'
 #!/bin/bash
 source .otk-venv/bin/activate
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 echo "✅ Orchestrator Toolkit environment activated"
-echo "📁 Artifacts will be stored in: .ai_docs/"
+echo "📁 Artifacts will be stored in: ai_docs/"
 EOF
 chmod +x activate_otk.sh
 

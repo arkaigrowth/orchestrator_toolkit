@@ -1,0 +1,174 @@
+{
+  "migration_metadata": {
+    "timestamp": "2025-10-12T05:52:00Z",
+    "source_pattern": ".ai_docs",
+    "target_pattern": "ai_docs",
+    "agent": "refactoring-expert",
+    "phase": "analysis"
+  },
+  "summary": {
+    "total_references": 87,
+    "files_affected": 13,
+    "file_categories": {
+      "python": 1,
+      "shell": 3,
+      "markdown": 5,
+      "config": 1,
+      "log": 1
+    }
+  },
+  "categorized_references": {
+    "python_files": [
+      {
+        "file": "src/orchestrator_toolkit/settings.py",
+        "lines": [15, 16, 19, 20],
+        "references": 4,
+        "context": "Default values and paths configuration",
+        "risk": "high",
+        "notes": "Core configuration - needs Pydantic model update"
+      }
+    ],
+    "shell_scripts": [
+      {
+        "file": "setup.bat",
+        "lines": [71, 72, 73, 74, 75, 82, 84],
+        "references": 7,
+        "context": "Windows setup script - directory creation and env var",
+        "risk": "medium",
+        "notes": "Cross-platform compatibility concern"
+      },
+      {
+        "file": "setup.sh",
+        "lines": [71, 72, 73, 74, 83, 94, 96],
+        "references": 7,
+        "context": "Unix setup script - directory creation and env var",
+        "risk": "medium",
+        "notes": "Primary installation script"
+      },
+      {
+        "file": "test_installation.sh",
+        "lines": [38, 45, 56, 71, 95],
+        "references": 5,
+        "context": "Test validation script",
+        "risk": "low",
+        "notes": "Test infrastructure - easy to update"
+      }
+    ],
+    "markdown_docs": [
+      {
+        "file": "EXAMPLE_USAGE.md",
+        "lines": [26, 27, 33, 39, 57, 79, 88, 100, 118, 201, 207, 213],
+        "references": 12,
+        "context": "User documentation and examples",
+        "risk": "medium",
+        "notes": "User-facing docs - needs migration guide"
+      },
+      {
+        "file": "README.md",
+        "lines": [16, 28, 32, 90, 96, 128, 129, 146, 198],
+        "references": 9,
+        "context": "Main documentation",
+        "risk": "high",
+        "notes": "Primary user entry point"
+      },
+      {
+        "file": "examples/workflow.md",
+        "lines": [12, 17, 27, 32, 67, 70, 73, 82, 142, 153, 154, 181, 190, 203, 204, 205, 206, 207, 214, 217, 256, 266, 269, 277, 286],
+        "references": 25,
+        "context": "Workflow examples and patterns",
+        "risk": "low",
+        "notes": "Example documentation"
+      },
+      {
+        "file": ".ai_docs/tasks/T-10012.md",
+        "lines": [],
+        "references": 0,
+        "context": "Task definition for this migration",
+        "risk": "none",
+        "notes": "Self-referential - will be in new location"
+      },
+      {
+        "file": ".ai_docs/plans/P-0001.md",
+        "lines": [],
+        "references": 0,
+        "context": "Plan definition for this migration",
+        "risk": "none",
+        "notes": "Self-referential - will be in new location"
+      }
+    ],
+    "config_files": [
+      {
+        "file": ".gitignore",
+        "lines": [35],
+        "references": 1,
+        "context": "Git ignore rules",
+        "risk": "low",
+        "notes": "Simple pattern replacement"
+      }
+    ],
+    "log_files": [
+      {
+        "file": "run_log.md",
+        "lines": [33, 37, 46, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 64, 65, 66, 67],
+        "references": 21,
+        "context": "Operational log file",
+        "risk": "none",
+        "notes": "Historical data - read-only, no update needed"
+      }
+    ]
+  },
+  "high_priority_updates": [
+    {
+      "file": "src/orchestrator_toolkit/settings.py",
+      "reason": "Core configuration - affects all operations",
+      "action": "Add docs_folder field, update defaults, maintain backward compatibility"
+    },
+    {
+      "file": "README.md",
+      "reason": "Primary user entry point",
+      "action": "Update all examples and references"
+    },
+    {
+      "file": "setup.sh",
+      "reason": "Primary installation script",
+      "action": "Update directory creation and env vars"
+    },
+    {
+      "file": "setup.bat",
+      "reason": "Windows installation script",
+      "action": "Update directory creation and env vars"
+    }
+  ],
+  "risk_assessment": {
+    "breaking_changes": true,
+    "data_loss_risk": "low",
+    "backward_compatibility": "achievable with env var override",
+    "rollback_complexity": "low",
+    "migration_complexity": "medium"
+  },
+  "edge_cases_identified": [
+    "Existing projects with .ai_docs folder need migration",
+    "Windows vs Unix path handling differences",
+    "Git operations in progress during migration",
+    "CI/CD pipelines with hardcoded paths",
+    "Docker volumes or mounts pointing to .ai_docs"
+  ],
+  "migration_strategy": {
+    "approach": "phased_with_rollback",
+    "backup_required": true,
+    "atomic_updates": "use MultiEdit for Python files",
+    "validation_steps": [
+      "Grep verification for remaining references",
+      "Test suite execution",
+      "IDE autocomplete validation",
+      "Migration script dry-run"
+    ]
+  },
+  "estimated_duration": {
+    "analysis": "30 minutes",
+    "implementation": "60 minutes",
+    "validation": "45 minutes",
+    "documentation": "30 minutes",
+    "total": "165 minutes (2.75 hours)"
+  }
+}

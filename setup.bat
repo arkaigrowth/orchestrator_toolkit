@@ -68,20 +68,20 @@ if %errorlevel% neq 0 (
 echo Installation complete
 echo.
 
-REM Create .ai_docs directory
-if not exist .ai_docs (
-    echo Creating .ai_docs directory...
-    mkdir .ai_docs\tasks
-    mkdir .ai_docs\plans
+REM Create ai_docs directory
+if not exist ai_docs (
+    echo Creating ai_docs directory...
+    mkdir ai_docs\tasks
+    mkdir ai_docs\plans
     echo Artifact directories created
 )
 
 REM Create activation script
 echo @echo off > activate_otk.bat
 echo call .otk-venv\Scripts\activate.bat >> activate_otk.bat
-echo set OTK_ARTIFACT_ROOT=.ai_docs >> activate_otk.bat
+echo set OTK_ARTIFACT_ROOT=ai_docs >> activate_otk.bat
 echo echo Orchestrator Toolkit environment activated >> activate_otk.bat
-echo echo Artifacts will be stored in: .ai_docs/ >> activate_otk.bat
+echo echo Artifacts will be stored in: ai_docs/ >> activate_otk.bat
 
 echo.
 echo ================================

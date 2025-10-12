@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "orchestrator-toolkit"
-version = "1.0.1"
+version = "2.0.0"
 description = "Lightweight task orchestration system for managing project workflows"
 requires-python = ">=3.10"
 authors = [
@@ -39,6 +39,8 @@ classifiers = [
 
 dependencies = [
     "pydantic-settings>=2.3,<3",
+    "ulid-py>=1.1,<2",
+    "filelock>=3.0,<4",
 ]
 
 [project.urls]

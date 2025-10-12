@@ -13,7 +13,7 @@ A lightweight task orchestration system for managing project workflows with Clau
 pip install --index-url https://test.pypi.org/simple/ orchestrator-toolkit
 
 # Set up environment
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 
 # Create your first task
 otk-task-new "Build awesome feature" --owner You
@@ -25,11 +25,11 @@ otk-plan-new "Implementation roadmap"
 orchestrator-once
 ```
 
-That's it! Your tasks and plans are now in `.ai_docs/`.
+That's it! Your tasks and plans are now in `ai_docs/`.
 
 ## ✨ Features
 
-- **📁 Centralized Artifacts**: All tasks/plans in `.ai_docs/` directory
+- **📁 Centralized Artifacts**: All tasks/plans in `ai_docs/` directory
 - **🆔 Smart ID Generation**: Directory-based IDs prevent merge conflicts
 - **🎨 Auto Templates**: Creates templates on first use
 - **💻 Cross-Platform**: Windows, macOS, and Linux support
@@ -87,13 +87,13 @@ setup.bat
 1. **Create Task**
    ```bash
    otk-task-new "Implement user authentication" --owner Backend
-   # Creates: .ai_docs/tasks/T-0001.md
+   # Creates: ai_docs/tasks/T-0001.md
    ```
 
 2. **Create Plan** (optional)
    ```bash
    otk-plan-new "Auth implementation details" --task T-0001
-   # Creates: .ai_docs/plans/P-0001.md
+   # Creates: ai_docs/plans/P-0001.md
    ```
 
 3. **Auto-generate Plans**
@@ -125,8 +125,8 @@ Implement user authentication
 ### Environment Configuration
 
 ```bash
-# Set artifact directory (default: .ai_docs)
-export OTK_ARTIFACT_ROOT=.ai_docs
+# Set artifact directory (default: ai_docs)
+export OTK_ARTIFACT_ROOT=ai_docs
 
 # Optional: Enable Archon integration
 export OTK_ARCHON_ENABLED=1
@@ -143,7 +143,7 @@ export OTK_MEM0_API_KEY=your-key
 
 ```
 your-project/
-├── .ai_docs/               # All artifacts (gitignored)
+├── ai_docs/               # All artifacts (gitignored)
 │   ├── tasks/             # Task files (T-XXXX.md)
 │   └── plans/             # Plan files (P-XXXX.md)
 ├── .claude/               # Claude-specific config
@@ -195,7 +195,7 @@ When using with Claude Code:
 | Issue | Solution |
 |-------|----------|
 | `ModuleNotFoundError` | Run `pip install orchestrator-toolkit` |
-| Tasks not in `.ai_docs/` | Set `export OTK_ARTIFACT_ROOT=.ai_docs` |
+| Tasks not in `ai_docs/` | Set `export OTK_ARTIFACT_ROOT=ai_docs` |
 | `pydantic_settings not found` | Run `pip install pydantic-settings>=2.3` |
 | Permission denied | Unix/macOS: `chmod +x setup.sh` |
 

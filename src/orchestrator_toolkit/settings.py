@@ -12,12 +12,45 @@ class OrchSettings(BaseSettings):
         extra="ignore",         # Ignore unknown envs
     )
 
-    # Accept relative or absolute; default ".ai_docs"
-    artifact_root: Path = Field(default=Path(".ai_docs"), validation_alias="ARTIFACT_ROOT")
+    # NEW: Configurable docs folder name (default without dot for visibility)
+    docs_folder: str = Field(
+        default="ai_docs",
+        validation_alias="DOCS_FOLDER",
+        description="Name of documentation folder (ai_docs for visibility, .ai_docs for hidden)"
+    )
 
-    # Derived paths
-    tasks_dir: Path = Field(default_factory=lambda: Path(".ai_docs") / "tasks")
-    plans_dir: Path = Field(default_factory=lambda: Path(".ai_docs") / "plans")
+    # Accept relative or absolute; default uses docs_folder
+    # LEGACY: artifact_root can still override everything for backward compatibility
+    artifact_root: Optional[Path] = Field(
+        default=None,
+        validation_alias="ARTIFACT_ROOT",
+        description="Legacy override for artifact location"
+    )
+
+    # Derived paths - computed based on docs_folder or artifact_root
+    tasks_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "tasks")
+    plans_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "plans")
+
+    # ULI/Slug Configuration (NEW for T-0001)
+    slug_max_length: int = Field(
+        default=60,
+        validation_alias="SLUG_MAXLEN",
+        ge=10,
+        le=100,
+        description="Maximum slug length (default: 60 chars)"
+    )
+
+    index_dir: str = Field(
+        default="claude",
+        validation_alias="INDEX_DIR",
+        description="Directory for ULI index (default: claude/)"
+    )
+
+    use_ulid: bool = Field(
+        default=True,
+        validation_alias="USE_ULID",
+        description="Use ULID format for ULIs (default: true)"
+    )
 
     # Adapters (keeping existing, but updating to use validation_alias)
     archon_enabled: bool = Field(default=False, validation_alias="ARCHON_ENABLED")
@@ -31,7 +64,15 @@ class OrchSettings(BaseSettings):
     def resolve_paths(self, cwd: Optional[Path] = None) -> None:
         """Make paths absolute (relative to repo cwd) and ensure directories exist."""
         base = cwd or Path.cwd()
-        root = self.artifact_root
+
+        # Determine effective root: artifact_root (legacy) or docs_folder (new)
+        if self.artifact_root is not None:
+            # Legacy mode: artifact_root takes precedence
+            root = self.artifact_root
+        else:
+            # New mode: use docs_folder
+            root = Path(self.docs_folder)
+
         if not root.is_absolute():
             root = (base / root).resolve()
 
@@ -41,6 +82,22 @@ class OrchSettings(BaseSettings):
 
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         self.plans_dir.mkdir(parents=True, exist_ok=True)
+
+        # Ensure index directory exists (NEW for ULI system)
+        index_path = Path(self.index_dir)
+        if not index_path.is_absolute():
+            index_path = (base / index_path).resolve()
+        index_path.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def index_path(self) -> Path:
+        """Full path to ULI index file."""
+        return Path(self.index_dir) / "uli_index.jsonl"
+
+    @property
+    def index_lock_path(self) -> Path:
+        """Full path to index lock file."""
+        return Path(self.index_dir) / "uli_index.lock"
 
     @classmethod
     def load(cls) -> "OrchSettings":

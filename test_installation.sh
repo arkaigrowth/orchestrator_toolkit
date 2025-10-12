@@ -35,16 +35,16 @@ echo -e "${YELLOW}Verifying installation...${NC}"
 pip show orchestrator-toolkit
 
 # Set environment variable
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 
 # Test commands
 echo -e "${GREEN}Testing commands...${NC}"
 
 echo "1. Creating a task..."
 task-new "Test task from installation script" --owner TestUser
-if [ -f ".ai_docs/tasks/T-0001.md" ]; then
+if [ -f "ai_docs/tasks/T-0001.md" ]; then
     echo -e "${GREEN}✓ Task created successfully${NC}"
-    cat .ai_docs/tasks/T-0001.md
+    cat ai_docs/tasks/T-0001.md
 else
     echo -e "${RED}✗ Task creation failed${NC}"
     exit 1
@@ -53,7 +53,7 @@ fi
 echo ""
 echo "2. Creating a plan..."
 plan-new "Test plan" --owner TestUser
-if [ -f ".ai_docs/plans/P-0001.md" ]; then
+if [ -f "ai_docs/plans/P-0001.md" ]; then
     echo -e "${GREEN}✓ Plan created successfully${NC}"
 else
     echo -e "${RED}✗ Plan creation failed${NC}"
@@ -68,7 +68,7 @@ echo -e "${GREEN}✓ Orchestrator ran successfully${NC}"
 echo ""
 echo "4. Testing alternate command names..."
 otk-task-new "Another test task" --owner TestUser2
-if [ -f ".ai_docs/tasks/T-0002.md" ]; then
+if [ -f "ai_docs/tasks/T-0002.md" ]; then
     echo -e "${GREEN}✓ otk-task-new works${NC}"
 else
     echo -e "${RED}✗ otk-task-new failed${NC}"
@@ -92,7 +92,7 @@ echo -e "${GREEN}═════════════════════
 echo -e "${GREEN}✅ All tests passed successfully!${NC}"
 echo -e "${GREEN}═══════════════════════════════════════════════${NC}"
 echo ""
-echo "Test artifacts created in: $TEST_DIR/.ai_docs/"
+echo "Test artifacts created in: $TEST_DIR/ai_docs/"
 echo ""
 echo "To clean up test directory, run:"
 echo "  rm -rf $TEST_DIR"

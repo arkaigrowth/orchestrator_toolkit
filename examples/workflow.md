@@ -9,12 +9,12 @@ This guide demonstrates common workflows using the Orchestrator Toolkit.
 ```bash
 # Create a new task for implementing a feature
 task-new "Add user profile page" --owner "Frontend Team"
-# Output: .ai_docs/tasks/T-0001.md
+# Output: ai_docs/tasks/T-0001.md
 ```
 
 ### 2. Review and Update Task Status
 
-Edit `.ai_docs/tasks/T-0001.md`:
+Edit `ai_docs/tasks/T-0001.md`:
 - Change `status: new` to `status: assigned`
 - Add specific notes and requirements
 
@@ -24,12 +24,12 @@ Edit `.ai_docs/tasks/T-0001.md`:
 # Run orchestrator to create plans for assigned tasks
 orchestrator-once
 # Output: created_plans=1
-# Creates: .ai_docs/plans/P-0001.md
+# Creates: ai_docs/plans/P-0001.md
 ```
 
 ### 4. Work on Implementation
 
-- Open the plan file: `.ai_docs/plans/P-0001.md`
+- Open the plan file: `ai_docs/plans/P-0001.md`
 - Follow the scaffolded steps
 - Update plan with actual implementation details
 
@@ -64,13 +64,13 @@ orchestrator-once
 
 ```bash
 # Check all tasks status
-ls -la .ai_docs/tasks/
+ls -la ai_docs/tasks/
 
 # Find assigned tasks
-grep -l "status: assigned" .ai_docs/tasks/*.md
+grep -l "status: assigned" ai_docs/tasks/*.md
 
 # Find blocked tasks
-grep -l "status: blocked" .ai_docs/tasks/*.md
+grep -l "status: blocked" ai_docs/tasks/*.md
 ```
 
 ## Integration Workflow: With Claude Code
@@ -79,7 +79,7 @@ grep -l "status: blocked" .ai_docs/tasks/*.md
 
 ```bash
 # In your project repository
-export OTK_ARTIFACT_ROOT=.ai_docs
+export OTK_ARTIFACT_ROOT=ai_docs
 
 # Create initial project structure task
 task-new "Setup project structure" --owner "You"
@@ -139,7 +139,7 @@ pip install -e .
 task-new "Test migration" --owner test
 
 # After migration
-ls -la .ai_docs/
+ls -la ai_docs/
 # Shows: tasks/ plans/ with all files migrated
 # Old directories are removed if empty
 ```
@@ -150,8 +150,8 @@ If files with same names exist in both old and new locations:
 
 ```
 Original: tasks/T-0001.md
-Existing: .ai_docs/tasks/T-0001.md
-Result:   .ai_docs/tasks/T-0001-migrated-1.md
+Existing: ai_docs/tasks/T-0001.md
+Result:   ai_docs/tasks/T-0001-migrated-1.md
 ```
 
 ## Automation Workflow: CI/CD Integration
@@ -178,7 +178,7 @@ jobs:
       - name: Install Orchestrator
         run: |
           pip install -e .
-          export OTK_ARTIFACT_ROOT=.ai_docs
+          export OTK_ARTIFACT_ROOT=ai_docs
 
       - name: Generate Plans
         run: orchestrator-once
@@ -187,7 +187,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add .ai_docs/
+          git add ai_docs/
           git commit -m "Auto-generate plans for assigned tasks" || true
           git push
 ```
@@ -200,21 +200,21 @@ jobs:
 # Count tasks by status
 echo "Task Status Summary:"
 echo "==================="
-echo "New:         $(grep -l 'status: new' .ai_docs/tasks/*.md 2>/dev/null | wc -l)"
-echo "Assigned:    $(grep -l 'status: assigned' .ai_docs/tasks/*.md 2>/dev/null | wc -l)"
-echo "In Progress: $(grep -l 'status: in-progress' .ai_docs/tasks/*.md 2>/dev/null | wc -l)"
-echo "Blocked:     $(grep -l 'status: blocked' .ai_docs/tasks/*.md 2>/dev/null | wc -l)"
-echo "Done:        $(grep -l 'status: done' .ai_docs/tasks/*.md 2>/dev/null | wc -l)"
+echo "New:         $(grep -l 'status: new' ai_docs/tasks/*.md 2>/dev/null | wc -l)"
+echo "Assigned:    $(grep -l 'status: assigned' ai_docs/tasks/*.md 2>/dev/null | wc -l)"
+echo "In Progress: $(grep -l 'status: in-progress' ai_docs/tasks/*.md 2>/dev/null | wc -l)"
+echo "Blocked:     $(grep -l 'status: blocked' ai_docs/tasks/*.md 2>/dev/null | wc -l)"
+echo "Done:        $(grep -l 'status: done' ai_docs/tasks/*.md 2>/dev/null | wc -l)"
 ```
 
 ### Find Tasks by Owner
 
 ```bash
 # List all tasks for specific owner
-grep -l 'owner: Backend Team' .ai_docs/tasks/*.md
+grep -l 'owner: Backend Team' ai_docs/tasks/*.md
 
 # Get task titles for owner
-grep -h 'title:' $(grep -l 'owner: Frontend Team' .ai_docs/tasks/*.md)
+grep -h 'title:' $(grep -l 'owner: Frontend Team' ai_docs/tasks/*.md)
 ```
 
 ## Best Practices
@@ -253,7 +253,7 @@ plan-new "Implementation details" --task T-0001
 
 - Run `orchestrator-once` daily or on sprint boundaries
 - Review and update blocked tasks weekly
-- Archive completed tasks monthly (move to `.ai_docs/archive/`)
+- Archive completed tasks monthly (move to `ai_docs/archive/`)
 
 ## Troubleshooting Common Issues
 
@@ -263,10 +263,10 @@ plan-new "Implementation details" --task T-0001
 **Solution**: The system prevents this by scanning directories, but if it occurs:
 ```bash
 # Check for duplicates
-ls .ai_docs/tasks/ | sort | uniq -d
+ls ai_docs/tasks/ | sort | uniq -d
 
 # Renumber if needed (manually)
-mv .ai_docs/tasks/T-0001.md .ai_docs/tasks/T-9999.md
+mv ai_docs/tasks/T-0001.md ai_docs/tasks/T-9999.md
 ```
 
 ### Issue: Lost Tasks After Migration
@@ -274,7 +274,7 @@ mv .ai_docs/tasks/T-0001.md .ai_docs/tasks/T-9999.md
 **Symptom**: Can't find old tasks
 **Solution**: Check for -migrated suffix:
 ```bash
-ls .ai_docs/tasks/*-migrated-*.md
+ls ai_docs/tasks/*-migrated-*.md
 ```
 
 ### Issue: Plans Not Generating
@@ -283,7 +283,7 @@ ls .ai_docs/tasks/*-migrated-*.md
 **Solution**: Ensure tasks have `status: assigned`:
 ```bash
 # Check task statuses
-grep "status:" .ai_docs/tasks/*.md
+grep "status:" ai_docs/tasks/*.md
 ```
 
 ---
