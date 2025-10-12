@@ -1,19 +1,51 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=68", "wheel", "build"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "orchestrator-toolkit"
 version = "1.0.0"
-description = "Tiny repo-scoped orchestration skeleton for Claude Code"
+description = "Lightweight task orchestration system for managing project workflows"
 requires-python = ">=3.10"
-authors = [{name="Your Team"}]
+authors = [
+    {name = "Arkai Growth", email = "dev@arkaigrowth.com"}
+]
+maintainers = [
+    {name = "Alex Kamysz", email = "alex@arkaigrowth.com"}
+]
 readme = "README.md"
-license = {text="MIT"}
+license = {text = "MIT"}
+keywords = [
+    "task-management",
+    "orchestration",
+    "workflow",
+    "claude-code",
+    "project-management",
+    "automation"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Scheduling",
+    "Topic :: Utilities"
+]
 
 dependencies = [
     "pydantic-settings>=2.3,<3",
 ]
+
+[project.urls]
+Homepage = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0"
+Documentation = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0#readme"
+Repository = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0"
+Issues = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0/issues"
 
 [project.scripts]
 # Primary entry points using Python scripts

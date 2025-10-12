@@ -3,8 +3,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 from pathlib import Path
 from typing import Optional
-import shutil
-import itertools
 
 class OrchSettings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -49,39 +47,4 @@ class OrchSettings(BaseSettings):
         """Centralized loader that honors OTK_ARTIFACT_ROOT."""
         s = cls()  # reads env (OTK_ARTIFACT_ROOT) via validation_alias
         s.resolve_paths()
-        s.migrate_legacy_layout()
         return s
-
-    def migrate_legacy_layout(self) -> None:
-        """Move legacy ./tasks and ./plans into artifact_root, without clobbering."""
-        legacy = {"tasks": Path("tasks"), "plans": Path("plans")}
-        moved_any = False
-
-        for kind, src in legacy.items():
-            if not src.is_dir():
-                continue
-            # only migrate .md files
-            for p in sorted(src.glob("*.md")):
-                dest_dir = self.tasks_dir if kind == "tasks" else self.plans_dir
-                dest = dest_dir / p.name
-                if dest.exists():
-                    # collision-safe: append suffix -migrated-N
-                    stem, suf = p.stem, p.suffix
-                    for n in itertools.count(1):
-                        candidate = dest_dir / f"{stem}-migrated-{n}{suf}"
-                        if not candidate.exists():
-                            dest = candidate
-                            break
-                shutil.move(str(p), str(dest))
-                moved_any = True
-
-        # remove empty legacy dirs
-        for src in legacy.values():
-            try:
-                if src.is_dir() and not any(src.iterdir()):
-                    src.rmdir()
-            except Exception:
-                pass
-
-        if moved_any:
-            print(f"✅ Migrated legacy ./tasks and ./plans into {self.artifact_root}/", flush=True)

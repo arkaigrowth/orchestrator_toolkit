@@ -41,6 +41,8 @@ plans/
 .env
 .env.local
 .env.*.local
+.pypirc
+~/.pypirc
 
 # Claude Specific
 .claude/.task_index
