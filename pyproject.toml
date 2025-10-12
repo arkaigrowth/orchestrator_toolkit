@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "orchestrator-toolkit"
+version = "1.0.0"
+description = "Tiny repo-scoped orchestration skeleton for Claude Code"
+requires-python = ">=3.10"
+authors = [{name="Your Team"}]
+readme = "README.md"
+license = {text="MIT"}
+
+dependencies = [
+    "pydantic-settings>=2.3,<3",
+]
+
+[project.scripts]
+# Primary entry points using Python scripts
+otk-task-new = "orchestrator_toolkit.scripts.task_new:main"
+otk-plan-new = "orchestrator_toolkit.scripts.plan_new:main"
+orchestrator-once = "orchestrator_toolkit.cli:orchestrator_once"
+# Backward compatibility aliases
+task-new = "orchestrator_toolkit.scripts.task_new:main"
+plan-new = "orchestrator_toolkit.scripts.plan_new:main"
+plan-summarize = "orchestrator_toolkit.cli:plan_summarize"
+# Note: orchestrator-watch commented out until fully implemented
+# orchestrator-watch = "orchestrator_toolkit.cli:orchestrator_watch"

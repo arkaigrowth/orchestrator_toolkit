@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sequential-thinking": {
+      "command": "bash",
+      "args": [
+        "-lc",
+        "echo 'seq' >/dev/null && sleep 0.01 && echo done >/dev/null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# Orchestrator Toolkit Requirements
+# Python >= 3.10 required
+
+# Core dependencies
+pydantic-settings>=2.3,<3
+
+# The pydantic-settings package automatically includes:
+# - pydantic>=2.7.0
+# - python-dotenv>=0.21.0
+# - typing-extensions>=4.6.1
+
+# Development dependencies (optional)
+# Uncomment these for development work:
+# pytest>=7.0.0
+# black>=22.0.0
+# mypy>=1.0.0
+# ruff>=0.1.0
