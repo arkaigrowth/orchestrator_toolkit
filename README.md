@@ -1,6 +1,6 @@
 # 🎯 Orchestrator Toolkit
 
-[![PyPI Test](https://img.shields.io/badge/PyPI%20Test-v1.0.0-orange)](https://test.pypi.org/project/orchestrator-toolkit/)
+[![PyPI Test](https://img.shields.io/badge/PyPI%20Test-v2.0.0-orange)](https://test.pypi.org/project/orchestrator-toolkit/)
 [![Python Version](https://img.shields.io/badge/python-≥3.10-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -9,8 +9,8 @@ A lightweight task orchestration system for managing project workflows with Clau
 ## 🚀 Quick Start (PyPI Test)
 
 ```bash
-# Install from PyPI Test
-pip install --index-url https://test.pypi.org/simple/ orchestrator-toolkit
+# Install from PyPI Test (v2.0.0)
+pip install --index-url https://test.pypi.org/simple/ orchestrator-toolkit==2.0.0
 
 # Set up environment
 export OTK_ARTIFACT_ROOT=ai_docs
@@ -27,22 +27,31 @@ orchestrator-once
 
 That's it! Your tasks and plans are now in `ai_docs/`.
 
+## 🆕 What's New in v2.0.0
+
+- **🔍 Visible Folders**: Tasks and plans stored in `ai_docs/` for IDE visibility
+- **🆔 ULI System**: Globally unique, time-sortable identifiers (ULID-based)
+- **🏷️ Human-Readable Slugs**: Future support for files like `T-0001--implement-auth.md`
+- **⚡ Fast Lookups**: O(1) cached index for instant file discovery
+- **🧪 Fully Tested**: 35+ comprehensive tests
+
 ## ✨ Features
 
-- **📁 Centralized Artifacts**: All tasks/plans in `ai_docs/` directory
-- **🆔 Smart ID Generation**: Directory-based IDs prevent merge conflicts
+- **📁 Visible Artifacts**: All tasks/plans in `ai_docs/` directory for IDE autocomplete
+- **🆔 Smart IDs**: Directory-based IDs with ULI infrastructure ready
 - **🎨 Auto Templates**: Creates templates on first use
 - **💻 Cross-Platform**: Windows, macOS, and Linux support
 - **🚀 Zero Config**: Works out of the box with sensible defaults
 - **🔌 Optional Integrations**: Archon and Mem0 adapters available
+- **🧪 Fully Tested**: 35+ tests ensuring reliability
 
 ## 📦 Installation Options
 
 ### From PyPI Test (Recommended)
 
 ```bash
-# Install latest version
-pip install --index-url https://test.pypi.org/simple/ orchestrator-toolkit
+# Install latest version (v2.0.0)
+pip install --index-url https://test.pypi.org/simple/ orchestrator-toolkit==2.0.0
 
 # Or install with extra index for dependencies
 pip install --index-url https://test.pypi.org/simple/ \
@@ -220,6 +229,6 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Version**: 1.0.0
+**Version**: 2.0.0
 **PyPI Test**: https://test.pypi.org/project/orchestrator-toolkit/
 **Repository**: https://github.com/arkaigrowth/orchestrator_toolkit_1.0

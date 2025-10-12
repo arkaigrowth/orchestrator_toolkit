@@ -16,11 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Collision Resolution**: Deterministic `-2`, `-3` suffix handling for duplicate slugs
 - **Performance**: O(1) cached lookups with JSONL index
 
-#### Folder Visibility Fix
-- **BREAKING CHANGE**: Renamed `.ai_docs` to `ai_docs` for IDE visibility
-- **IDE Autocomplete**: Now works with `ai_docs/tasks/T-` and `ai_docs/plans/P-`
-- **Migration Support**: Automatic migration script included
-- **Backward Compatibility**: Use `OTK_ARTIFACT_ROOT=.ai_docs` to keep old behavior
+#### Folder Visibility
+- **Visible by Default**: Uses `ai_docs/` folder for IDE visibility
+- **IDE Autocomplete**: Works perfectly with `ai_docs/tasks/T-` and `ai_docs/plans/P-`
 
 ### ✨ New Features
 - Added `uli.py` module for ULI generation and validation
@@ -42,33 +40,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `filelock>=3.0,<4` for thread-safe file operations
 - Updated to `pydantic-settings>=2.3,<3`
 
-### 🔄 Migration Guide
+### 🔧 Configuration
 
-#### From 1.x to 2.0.0
+**Environment Variables**:
+```bash
+# Customize artifact folder (default: ai_docs)
+export OTK_ARTIFACT_ROOT=my_docs
 
-1. **Folder Migration** (BREAKING CHANGE):
-   ```bash
-   # Option 1: Use migration script
-   python scripts/migrate_docs_folder.py
+# Customize slug length (default: 60)
+export OTK_SLUG_MAXLEN=80
 
-   # Option 2: Manual migration
-   mv .ai_docs ai_docs
-
-   # Option 3: Keep old behavior
-   export OTK_ARTIFACT_ROOT=.ai_docs
-   ```
-
-2. **New Environment Variables**:
-   ```bash
-   # Customize folder name (default: ai_docs)
-   export OTK_DOCS_FOLDER=my_docs
-
-   # Customize slug length (default: 60)
-   export OTK_SLUG_MAXLEN=80
-
-   # Customize index location (default: claude/)
-   export OTK_INDEX_DIR=index/
-   ```
+# Customize index location (default: claude/)
+export OTK_INDEX_DIR=index/
+```
 
 ### 🐛 Bug Fixes
 - Fixed IDE autocomplete not working with hidden folders
@@ -86,10 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full test coverage for migration scenarios
 - Performance benchmarks for index operations
 
-### ⚠️ Breaking Changes
-- Default artifact folder changed from `.ai_docs` to `ai_docs`
-- Requires migration for existing projects (script provided)
-- Minimum Python version remains 3.10
 
 ### 🙏 Acknowledgments
 - Thanks to Chad for the comprehensive integration plans
