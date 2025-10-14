@@ -5,6 +5,24 @@ All notable changes to the Orchestrator Toolkit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-10-14
+
+### Changed
+- **README Rewrite**: Complete user-first marketing approach
+  - Leads with problem/solution (lost context → organized workflow)
+  - Real authentication example with actual terminal output
+  - Highlights Claude Code integration as killer feature
+  - Common workflows: solo dev, with Claude, project continuity, multi-feature
+  - Natural language interface examples
+  - FAQ covering real user questions
+  - Troubleshooting with solutions, not just problems
+  - Benefits-first language throughout
+  - Progressive disclosure (simple → advanced)
+
+### Documentation
+- No code changes, documentation-only release
+- Improved marketing and user onboarding experience
+
 ## [2.0.0] - 2025-10-14
 
 ### 🎉 Major Release: PLAN/SPEC/EXECUTE Workflow

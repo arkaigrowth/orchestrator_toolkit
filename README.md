@@ -1,6 +1,6 @@
 # 🎯 Orchestrator Toolkit
 
-[![PyPI](https://img.shields.io/badge/PyPI-v2.0.0-blue)](https://pypi.org/project/orchestrator-toolkit/)
+[![PyPI](https://img.shields.io/badge/PyPI-v2.0.1-blue)](https://pypi.org/project/orchestrator-toolkit/)
 [![Python](https://img.shields.io/badge/python-≥3.10-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -611,7 +611,7 @@ A: Yes! Set different owners (`otk owner set "Team Name"`)
 ## Links
 
 - **📦 PyPI**: https://pypi.org/project/orchestrator-toolkit/
-- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.0.0/
+- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.0.1/
 - **💻 GitHub**: https://github.com/arkaigrowth/orchestrator_toolkit
 - **📖 Changelog**: [CHANGELOG.md](CHANGELOG.md)
 - **🤝 Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -622,6 +622,6 @@ MIT License - see [LICENSE](LICENSE)
 
 ---
 
-**Version 2.0.0** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
+**Version 2.0.1** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
 
 **Stop losing track. Start shipping.** 🚀
