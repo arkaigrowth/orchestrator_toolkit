@@ -5,6 +5,27 @@ All notable changes to the Orchestrator Toolkit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2025-10-14
+
+### Changed
+- **README Improvements**: Natural language first + state machine clarity (based on Chad's feedback)
+  - **Quick Start**: Natural language examples FIRST, CLI equivalents second
+  - **State Machine Box**: Explicit idempotency rules with before/after visual
+  - **Command Map**: NL ↔ CLI equivalents table with "when to use" guidance
+  - **Claude Example**: Shows exact commands Claude runs (deterministic workflow)
+  - **Troubleshooting**: Decision tree for "no SPEC appeared" issue
+  - **Scout Role**: Precise definition: "Reads SPEC → generates checklist"
+  - **Owner Resolution**: Tightened to single paragraph cascade
+  - **Frontmatter**: All examples show complete metadata (spec_id, plan_id, status, owner, created)
+  - **Installation**: Added pipx option for CLI-only usage
+  - **Who Creates Plans**: Clear explanation of human vs Claude agency
+
+### Documentation
+- No code changes, documentation-only release
+- Addresses common user confusion points identified in feedback
+- Reduces "what do I type?" anxiety through NL-first approach
+- Explicit state machine rules prevent "where's my SPEC?" issues
+
 ## [2.0.1] - 2025-10-14
 
 ### Changed

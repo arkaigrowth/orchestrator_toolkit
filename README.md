@@ -1,6 +1,6 @@
 # 🎯 Orchestrator Toolkit
 
-[![PyPI](https://img.shields.io/badge/PyPI-v2.0.1-blue)](https://pypi.org/project/orchestrator-toolkit/)
+[![PyPI](https://img.shields.io/badge/PyPI-v2.0.2-blue)](https://pypi.org/project/orchestrator-toolkit/)
 [![Python](https://img.shields.io/badge/python-≥3.10-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -20,20 +20,36 @@ You know this story:
 
 Three simple concepts. Zero configuration. Works with Claude Code automatically.
 
-## Quick Start (Seriously, 30 Seconds)
+## Quick Start (30 Seconds)
+
+### Natural Language (Recommended)
 
 ```bash
 pip install orchestrator-toolkit
 
-# You: "I want to add authentication"
-otk plan "Add user authentication" --ready
+# Just say what you want
+otk-new "plan 'Add user authentication' and mark it ready"
 
 # Auto-generate detailed spec
-otk orchestrate
+otk-new "generate spec for ready plans"
 
-# Get your implementation checklist
+# Get implementation checklist
+otk-new "scout the spec"
+```
+
+**Why this works**: No flags, no IDs to remember. Just say what you want.
+
+### CLI Equivalents (for scripts & automation)
+
+```bash
+otk plan "Add user authentication" --ready
+otk orchestrate
 otk scout SPEC-20251014-xxxxx
 ```
+
+**When to use**: Automation, CI/CD, when you need precise control.
+
+---
 
 **That's it.** You now have:
 - ✅ High-level plan in `ai_docs/plans/`
@@ -41,12 +57,40 @@ otk scout SPEC-20251014-xxxxx
 - ✅ Implementation checklist in `ai_docs/scout_reports/`
 - ✅ All visible in your IDE, tracked in markdown
 
+## How Orchestration Works (Important!)
+
+**The Rules** (prevents "where's my SPEC?" issues):
+
+`otk orchestrate` ONLY processes PLANs where:
+- ✅ `status: ready` **AND**
+- ✅ `spec_id: ""` (empty)
+
+**What Happens**:
+
+```
+BEFORE orchestrate:
+├── PLAN: status=ready, spec_id=""
+└── (no SPEC exists yet)
+
+AFTER orchestrate:
+├── PLAN: status=in-spec, spec_id="SPEC-20251014-01K7JE"
+└── SPEC: plan_id="PLAN-20251014-01K7A2", status=draft
+```
+
+**Idempotency**: Safe to re-run `otk orchestrate`—won't create duplicates!
+
+**Status Flow**:
+```
+PLAN:  draft → ready → in-spec → executing → done
+SPEC:  draft → designed → built → done
+```
+
 ## Real Example: Adding Authentication
 
 ### Step 1: Create a PLAN (Your Idea)
 
 ```bash
-$ otk plan "Add JWT authentication with OAuth 2.0 support" --ready
+$ otk-new "plan 'Add JWT authentication with OAuth 2.0 support' and mark ready"
 
 ✅ Created: ai_docs/plans/PLAN-20251014-01K7A2-jwt-authentication.md
    Status: ready
@@ -57,19 +101,23 @@ $ otk plan "Add JWT authentication with OAuth 2.0 support" --ready
 ---
 id: PLAN-20251014-01K7A2-jwt-authentication
 title: Add JWT authentication with OAuth 2.0 support
-status: ready
+owner: YourName
+created: 2025-10-14T01:23:45Z
+status: ready          # draft|ready|in-spec|executing|done
+spec_id: ""            # filled after orchestrate creates SPEC
 ---
 
 ## Objective
 Add JWT authentication with OAuth 2.0 support
 
 ## Milestones
-- [ ] Define objectives and success criteria
-- [ ] Identify major components and phases
-- [ ] Track overall progress
+- [ ] Design authentication flow
+- [ ] Implement JWT middleware
+- [ ] Add OAuth providers
+- [ ] Security audit
 ```
 
-**Why this matters**: Your vague idea is now a trackable thing.
+**Why this matters**: Your vague idea is now a trackable thing with a unique ID.
 
 ### Step 2: Generate a SPEC (Technical Details)
 
@@ -78,6 +126,10 @@ $ otk orchestrate
 
 Created: ai_docs/specs/SPEC-20251014-01K7JE-implementation-for-jwt.md
 ✅ Created 1 SPEC(s)
+
+# PLAN updated automatically:
+#   spec_id: "SPEC-20251014-01K7JE"
+#   status: "in-spec"
 ```
 
 **What you get** (`ai_docs/specs/SPEC-20251014-01K7JE-implementation-for-jwt.md`):
@@ -85,67 +137,75 @@ Created: ai_docs/specs/SPEC-20251014-01K7JE-implementation-for-jwt.md
 ---
 id: SPEC-20251014-01K7JE-implementation-for-jwt
 plan_id: PLAN-20251014-01K7A2-jwt-authentication
-status: draft
+title: JWT Token Middleware Implementation
+owner: YourName
+created: 2025-10-14T02:15:30Z
+status: draft          # draft|designed|built|done
 ---
 
 ## Objective
-Implement technical solution for: Add JWT authentication
+Implement technical solution for: Add JWT authentication with OAuth 2.0 support
 
 ## Approach
 ### Technical Design
-[Space for you/Claude to design the solution]
+- Use `pyjwt` library with RS256 signing
+- Token expiry: 1 hour (access), 7 days (refresh)
+- Store refresh tokens in database
 
 ### Implementation Steps
-- [ ] Analyze requirements from PLAN
-- [ ] Design technical approach
-- [ ] Implement solution
-- [ ] Test and validate
+- [ ] Install and configure pyjwt
+- [ ] Create token generation service
+- [ ] Implement validation middleware
+- [ ] Add refresh token endpoint
+- [ ] Write unit tests for all flows
 
 ## Acceptance Criteria
-- [ ] All PLAN objectives met
-- [ ] Tests passing
+- [ ] All tests passing with ≥90% coverage
+- [ ] Security review completed
 - [ ] Documentation updated
+- [ ] OAuth 2.0 flow working for GitHub + Google
 ```
 
-**Why this matters**: Template ready for you or Claude to fill in with technical details.
+**Why this matters**: Template filled by you or Claude with specific technical details.
 
 ### Step 3: Get Implementation Checklist
 
 ```bash
 $ otk scout SPEC-20251014-01K7JE
 
+🔍 Scouting: SPEC-20251014-01K7JE-implementation-for-jwt.md
+   Found 8 implementation tasks
 ✅ Scout report saved: ai_docs/scout_reports/SPEC-...-scout.md
 
 📋 Summary:
    - Development: 1 tasks
-   - Implementation: 2 tasks
+   - Implementation: 4 tasks
    - Testing: 1 tasks
-   - Validation: 3 tasks
-   - Documentation: 1 task
+   - Validation: 2 tasks
 ```
 
 **What you get** (`ai_docs/scout_reports/SPEC-...-scout.md`):
 ```markdown
-## Implementation Checklist
+## Implementation Checklist for SPEC-20251014-01K7JE
 
 ### 🔨 Development
-- [ ] Implement solution
+- [ ] Install and configure pyjwt
 
 ### ⚙️ Implementation
-- [ ] Analyze requirements from PLAN
-- [ ] Design technical approach
+- [ ] Create token generation service
+- [ ] Implement validation middleware
+- [ ] Add refresh token endpoint
+- [ ] Write unit tests for all flows
 
 ### 🧪 Testing
-- [ ] Test and validate
+- [ ] Ensure all tests passing with ≥90% coverage
 
 ### ✅ Validation
-- [ ] Ensure: All PLAN objectives met
-- [ ] Ensure: Tests passing
-- [ ] Ensure: Documentation updated
-
-### 📚 Documentation
-- [ ] Update documentation with new features
+- [ ] Security review completed
+- [ ] OAuth 2.0 flow working for GitHub + Google
 ```
+
+**What scout does**: Reads the SPEC's objectives and acceptance criteria, then generates an actionable checklist in `ai_docs/scout_reports/`.
 
 **Why this matters**: Clear checklist of what to do next. No guessing.
 
@@ -157,38 +217,77 @@ $ otk exec SPEC-20251014-01K7JE
 ✅ Execution log created: ai_docs/exec_logs/SPEC-...-exec-20251014-031237.md
 ```
 
-**What you get**: Timestamped log to track what you're doing, decisions made, blockers hit.
+**What you get**: Timestamped log to track implementation, decisions made, blockers hit.
 
 ---
 
 ## 🤖 The Killer Feature: Works With Claude Code
 
-**Here's where it gets magical.**
+**Here's where it gets magical.** Claude becomes your deterministic project manager.
 
-When you use Claude Code with OTK, Claude becomes your project manager:
+### Who Creates Plans?
+
+**You can:**
+```bash
+otk-new "plan 'Add search functionality' and mark ready"
+```
+
+**Or ask Claude:**
+```
+You: "Create a plan for adding search to the app"
+Claude: *runs* otk plan "Add search functionality" --ready
+```
+
+**Best practice**: For large repos, use a "Planner" subagent that reads the repo structure first, then creates the PLAN with context.
+
+### Example: Complete Workflow with Claude
 
 ```
-You: "Let's add search functionality to the app"
+You: "Let's add user profiles with avatars"
 
-Claude: *runs* otk plan "Add search functionality" --ready
-Claude: *runs* otk orchestrate
-Claude: *runs* otk scout SPEC-20251014-xxxxx
+Claude (runs these exact commands):
 
-Claude: "I've created a plan and implementation checklist.
-         Ready to start? I'll track our progress in the exec log."
+1. otk plan "User profiles with avatars" --ready
+   ✅ Created PLAN-20251014-01K7A2
+
+2. otk orchestrate
+   ✅ Created SPEC-20251014-01K7JE
+   ✅ Updated PLAN: spec_id filled, status→in-spec
+   (Idempotent—safe to re-run if interrupted)
+
+3. otk scout SPEC-20251014-01K7JE
+   ✅ Generated checklist: 8 tasks across 5 categories
+
+Claude: "Ready to implement? I'll track our progress."
 
 You: "Yes, let's do it"
 
-Claude: *runs* otk exec SPEC-20251014-xxxxx
-Claude: *starts implementing while updating the exec log*
+4. otk exec SPEC-20251014-01K7JE
+   ✅ Execution log: SPEC-...-exec-20251014-031237.md
+
+Claude: *implements while updating the exec log*
 ```
 
-**You get:**
-- 📋 Automatic planning and scoping
-- ✅ Implementation checklists
-- 📝 Progress tracking in real-time
-- 🔍 Full visibility in `ai_docs/` folder
-- 🔄 Continuity across sessions (come back tomorrow, Claude knows where you are)
+**Why this is powerful**:
+- ✅ Automatic planning and scoping
+- ✅ Idempotent (safe to resume after interruption)
+- ✅ Full visibility in `ai_docs/` folder
+- ✅ Continuity across sessions (come back tomorrow, Claude knows where you are)
+
+## Command Map
+
+| I want to... | Natural Language | CLI Equivalent | When to use |
+|-------------|------------------|----------------|-------------|
+| Create plan and mark ready | `otk-new "plan 'Add auth' and mark ready"` | `otk plan "Add auth" --ready` | **NL**: Quick start<br>**CLI**: Scripts |
+| Generate specs from ready plans | `otk-new "generate specs"` | `otk orchestrate` | **NL**: Don't know PLAN IDs<br>**CLI**: Automation |
+| Create spec for specific plan | `otk-new "spec for PLAN-xxx 'DB schema'"` | `otk spec "DB schema" --plan PLAN-xxx` | **NL**: Conversational<br>**CLI**: Precise control |
+| Get implementation checklist | `otk-new "scout SPEC-xxx"` | `otk scout SPEC-xxx` | Either works |
+| Track execution | `otk-new "execute SPEC-xxx"` | `otk exec SPEC-xxx` | Either works |
+| Mark plan ready later | `otk-new "ready PLAN-xxx"` | Edit PLAN file: `status: ready` | **NL**: Quick<br>**Edit**: Batch changes |
+| See owner resolution | — | `otk owner who` | Debugging |
+| Set persistent owner | — | `otk owner set "Team Name"` | Multi-developer |
+
+💡 **Pro Tip**: Use natural language for interactive work, CLI for automation.
 
 ## Common Workflows
 
@@ -196,7 +295,7 @@ Claude: *starts implementing while updating the exec log*
 
 ```bash
 # Start with your idea
-otk plan "Improve app performance" --ready
+otk-new "plan 'Improve app performance' and mark ready"
 
 # Get specific
 otk orchestrate   # Creates detailed spec
@@ -214,7 +313,7 @@ otk exec SPEC-xxx    # Log what you did
 ### 2. With Claude Code: "Claude, help me build X"
 
 ```
-You: "Claude, I want to add user profiles with avatars"
+You: "Claude, I want to add dark mode with system preference detection"
 
 Claude: [Creates PLAN automatically]
 Claude: [Generates SPEC with technical details]
@@ -235,56 +334,41 @@ ls ai_docs/exec_logs/    # See recent work
 cat ai_docs/exec_logs/SPEC-xxx-exec-latest.md
 ```
 
-**With Claude Code**: Just say "What were we working on?" Claude reads the logs and catches you up.
+**With Claude Code**: Just say "What were we working on?" Claude reads the logs and catches you up instantly.
 
 ### 4. Managing Multiple Features
 
 ```bash
 # Create multiple PLANs
-otk plan "Add search" --ready
-otk plan "Improve performance"
-otk plan "Refactor auth module"
+otk-new "plan 'Add search' and mark ready"
+otk-new "plan 'Improve performance'"
+otk-new "plan 'Refactor auth module'"
 
 # Generate specs for ready ones
-otk orchestrate   # Only processes ready PLANs
+otk orchestrate   # Only processes PLANs with status=ready
 
 # Work on them independently
 otk scout SPEC-search-xxx
 otk exec SPEC-search-xxx
 
-# Later...
-otk plan "Improve performance" --ready  # Mark ready when you're ready
-otk orchestrate  # Creates spec
+# Later... mark another ready
+otk-new "ready PLAN-performance-xxx"
+otk orchestrate  # Creates new SPEC
 ```
-
-## Natural Language Interface
-
-**Forget command syntax**. Just say what you want:
-
-```bash
-# Create plans
-otk-new "plan 'Add OAuth login'"
-otk-new "implement dark mode"
-otk-new "feature for exporting data"
-
-# Create specs
-otk-new "spec for PLAN-xxx 'Database schema'"
-otk-new "design API for PLAN-yyy"
-
-# Execute
-otk-new "execute SPEC-zzz"
-otk-new "implement SPEC-www"
-
-# Mark ready
-otk-new "ready PLAN-xxx"
-```
-
-**The CLI figures out what you mean.** No memorizing commands.
 
 ## Installation
 
 ```bash
+# Standard installation
 pip install orchestrator-toolkit
+
+# CLI-only (isolated, no project pollution)
+pipx install orchestrator-toolkit
+
+# From TestPyPI (latest)
+pip install --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            orchestrator-toolkit
 ```
 
 **No configuration needed.** Sensible defaults:
@@ -298,25 +382,26 @@ pip install orchestrator-toolkit
 
 **PLAN** (Your Goal)
 - High-level: "Add authentication"
-- Status tracking: draft → ready → in-spec → executing → done
-- Links to SPECs when generated
+- Status tracking: `draft → ready → in-spec → executing → done`
+- Links to SPECs via `spec_id` field
 
 **SPEC** (How To Build It)
 - Technical details: "JWT tokens with RS256, 1-hour expiry..."
 - Acceptance criteria: "Tests passing, security review done..."
 - Implementation steps: Specific tasks to complete
+- Links back to PLAN via `plan_id` field
 
 **EXECUTE** (What You're Doing)
 - Timestamped logs of actual work
 - Track decisions, blockers, progress
 - Multiple exec logs per SPEC (resume work across sessions)
 
-### The Workflow
+### The Workflow (Deterministic)
 
 ```
 PLAN (your idea)
-  ↓
-  otk orchestrate
+  ↓  (status=ready AND spec_id="" required)
+  otk orchestrate (idempotent)
   ↓
 SPEC (technical details)
   ↓
@@ -326,7 +411,7 @@ Checklist (what to do)
   ↓
   otk exec
   ↓
-EXECUTE (track progress)
+Execution log (what you did)
 ```
 
 ### File Organization
@@ -351,60 +436,22 @@ your-project/
 - ✅ Git-ignored by default (no noise in commits)
 - ✅ Backed up with your code
 
-## Command Reference
-
-### Core Commands
-
-| Command | What It Does | Example |
-|---------|-------------|---------|
-| `otk plan "title" [--ready]` | Create PLAN (your idea) | `otk plan "Add search" --ready` |
-| `otk orchestrate` | Generate SPECs from ready PLANs | `otk orchestrate` |
-| `otk scout SPEC-ID` | Get implementation checklist | `otk scout SPEC-20251014-xxxxx` |
-| `otk exec SPEC-ID` | Track execution progress | `otk exec SPEC-20251014-xxxxx` |
-
-### Helper Commands
-
-| Command | What It Does | Example |
-|---------|-------------|---------|
-| `otk spec "title" [--plan ID]` | Create SPEC manually | `otk spec "API design" --plan PLAN-xxx` |
-| `otk owner who` | See who owns files | `otk owner who` |
-| `otk owner set NAME` | Set default owner | `otk owner set "DevTeam"` |
-| `otk-new "anything"` | Natural language interface | `otk-new "plan 'Add OAuth'"` |
-
-### Typical Flow
-
-```bash
-# 1. Start with idea
-otk plan "Add real-time notifications" --ready
-
-# 2. Generate detailed spec
-otk orchestrate
-
-# 3. Get implementation checklist
-otk scout SPEC-20251014-xxxxx
-
-# 4. Start working and track progress
-otk exec SPEC-20251014-xxxxx
-
-# (edit the exec log as you work)
-```
-
 ## Advanced Usage
 
 ### Owner Management
 
-By default, owner comes from:
-1. `OTK_OWNER` environment variable
-2. `.otk/.owner` file
-3. Git `user.name`
-4. System username
+**Owner resolution cascade**:
+`OTK_OWNER` env → `.otk/.owner` file → `git config user.name` → system username
 
 ```bash
 # See the resolution chain
 otk owner who
 
+# Override for session
+export OTK_OWNER="Backend Team"
+
 # Set persistent owner
-otk owner set "Backend Team"
+otk owner set "Backend Team"  # Creates .otk/.owner
 ```
 
 ### Working with Claude Code
@@ -444,6 +491,8 @@ Owners are tracked in frontmatter:
 ---
 id: PLAN-20251014-xxxxx
 owner: Backend Team
+status: ready
+spec_id: ""
 ---
 ```
 
@@ -469,77 +518,56 @@ Variables available: `${ID}`, `${TITLE}`, `${OWNER}`, `${DATE}`, `${STATUS}`
 **Old way** (v1.x): `PLAN-001`, `PLAN-002` (requires counter, hard to merge)
 **New way** (v2.0): `PLAN-20251014-01K7A2-auth-system` (globally unique)
 
-## Integration Examples
-
-### With CI/CD
-
-```yaml
-# .github/workflows/check-plans.yml
-- name: Check open PLANs
-  run: |
-    if ls ai_docs/plans/PLAN-*-ready.md 1> /dev/null 2>&1; then
-      echo "⚠️ Ready PLANs waiting for orchestration"
-      ls ai_docs/plans/*-ready.md
-    fi
-```
-
-### With Pre-commit Hooks
-
-```bash
-# .git/hooks/pre-commit
-#!/bin/bash
-# Remind about tracking work
-if git diff --cached --name-only | grep -q "^src/"; then
-  if ! ls ai_docs/exec_logs/*$(date +%Y%m%d)*.md 1> /dev/null 2>&1; then
-    echo "💡 Tip: Track your work with 'otk exec SPEC-xxx'"
-  fi
-fi
-```
-
-### With Documentation
-
-```bash
-# Generate project status
-echo "# Project Status" > STATUS.md
-echo "" >> STATUS.md
-echo "## Active Plans" >> STATUS.md
-ls ai_docs/plans/*.md | xargs -I {} basename {} >> STATUS.md
-echo "" >> STATUS.md
-echo "## In Progress" >> STATUS.md
-ls ai_docs/exec_logs/*$(date +%Y%m%d)*.md 2>/dev/null | xargs -I {} basename {} >> STATUS.md
-```
-
 ## Troubleshooting
 
-### "No SPECs created when I run orchestrate"
+### No SPECs created when running orchestrate?
 
-**Check**: Does your PLAN have `status: ready`?
+**Decision tree**:
+```
+orchestrate ran → No SPEC appeared
+    ↓
+Check: cat ai_docs/plans/PLAN-xxx.md | grep "status:"
+    ↓
+├─ status: draft → Fix: otk-new "ready PLAN-xxx"
+├─ status: ready, spec_id: "SPEC-..." → Already has SPEC! Check ai_docs/specs/
+└─ status: ready, spec_id: "" → Should work. Try: rm -rf .otk/cache && otk orchestrate
+```
 
+**Quick fixes**:
 ```bash
 # See PLAN status
-cat ai_docs/plans/PLAN-xxx.md | grep status
+cat ai_docs/plans/PLAN-xxx.md | head -10
 
-# Mark as ready
+# Mark ready
 otk-new "ready PLAN-xxx"
 
 # Or recreate with --ready flag
 otk plan "Title" --ready
+
+# Safe to re-run (idempotent)
+otk orchestrate
 ```
 
-### "Where did my files go?"
+**Remember**: `otk orchestrate` is idempotent—safe to run multiple times.
 
-**Check**: Default location is `ai_docs/`
+### SPEC "disappeared"?
 
+**Check files exist**:
 ```bash
-ls ai_docs/plans/     # Your PLANs
-ls ai_docs/specs/     # Your SPECs
-ls ai_docs/exec_logs/ # Your execution logs
+ls ai_docs/specs/              # SPECs are always files
+cat ai_docs/plans/PLAN-xxx.md | grep spec_id
 ```
 
-### "Wrong owner on files"
+**If spec_id is empty**: The SPEC wasn't created. Run `otk orchestrate` again (safe, idempotent).
 
-**Check**: Owner resolution chain
+**If spec_id shows a SPEC**: The SPEC file exists in `ai_docs/specs/`, you just need to find it:
+```bash
+ls ai_docs/specs/SPEC-20251014-*
+```
 
+### Wrong owner on files?
+
+**Check resolution chain**:
 ```bash
 otk owner who
 
@@ -549,6 +577,12 @@ export OTK_OWNER="YourName"
 # Or set persistent
 otk owner set "YourName"
 ```
+
+**Owner cascade** (first match wins):
+1. `OTK_OWNER` environment variable
+2. `.otk/.owner` file in current directory
+3. `git config user.name`
+4. System username
 
 ## Migration from v1.x
 
@@ -562,7 +596,7 @@ otk owner set "YourName"
 All v1.x commands still work:
 ```bash
 otk-task-new "Feature"       # Still works
-otk-plan-new "Implementation" # Still works
+otk-plan-new "Implementation" # Still works (creates numbered plan)
 orchestrator-once            # Still works
 ```
 
@@ -573,7 +607,7 @@ orchestrator-once            # Still works
 otk-task-new "Add feature"
 
 # New way (recommended)
-otk plan "Add feature" --ready
+otk-new "plan 'Add feature' and mark ready"
 otk orchestrate
 ```
 
@@ -608,10 +642,13 @@ A: Just delete the markdown file. That's it.
 **Q: Can multiple people use this on the same project?**
 A: Yes! Set different owners (`otk owner set "Team Name"`)
 
+**Q: Why did my SPEC not appear?**
+A: Check that your PLAN has `status: ready` AND `spec_id: ""`. Then run `otk orchestrate` (safe to re-run).
+
 ## Links
 
 - **📦 PyPI**: https://pypi.org/project/orchestrator-toolkit/
-- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.0.1/
+- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.0.2/
 - **💻 GitHub**: https://github.com/arkaigrowth/orchestrator_toolkit
 - **📖 Changelog**: [CHANGELOG.md](CHANGELOG.md)
 - **🤝 Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -622,6 +659,6 @@ MIT License - see [LICENSE](LICENSE)
 
 ---
 
-**Version 2.0.1** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
+**Version 2.0.2** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
 
 **Stop losing track. Start shipping.** 🚀
