@@ -1,20 +1,22 @@
 ---
-id: P-${ID}
-task: ${TASK_ID}
+id: ${ID}
 title: ${TITLE}
 owner: ${OWNER}
 created: ${DATE}
-status: draft
+status: ${STATUS}
+spec_id: ""
 ---
 
 ## Overview
-(Brief summary of approach.)
+
+(Scaffolded by orchestrator.)
 
 ## Steps
-1. ...
-2. ...
-3. ...
+
+1. Draft approach
+2. Identify inputs
+3. Produce deliverable
 
 ## References
-- (paths to local docs, URLs)
 
+- (add paths / URLs)

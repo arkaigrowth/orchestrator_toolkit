@@ -30,6 +30,8 @@ class OrchSettings(BaseSettings):
     # Derived paths - computed based on docs_folder or artifact_root
     tasks_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "tasks")
     plans_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "plans")
+    specs_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "specs")
+    exec_logs_dir: Path = Field(default_factory=lambda: Path("ai_docs") / "exec_logs")
 
     # ULI/Slug Configuration (NEW for T-0001)
     slug_max_length: int = Field(
@@ -79,9 +81,13 @@ class OrchSettings(BaseSettings):
         self.artifact_root = root
         self.tasks_dir = (root / "tasks").resolve()
         self.plans_dir = (root / "plans").resolve()
+        self.specs_dir = (root / "specs").resolve()
+        self.exec_logs_dir = (root / "exec_logs").resolve()
 
         self.tasks_dir.mkdir(parents=True, exist_ok=True)
         self.plans_dir.mkdir(parents=True, exist_ok=True)
+        self.specs_dir.mkdir(parents=True, exist_ok=True)
+        self.exec_logs_dir.mkdir(parents=True, exist_ok=True)
 
         # Ensure index directory exists (NEW for ULI system)
         index_path = Path(self.index_dir)

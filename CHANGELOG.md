@@ -5,98 +5,156 @@ All notable changes to the Orchestrator Toolkit will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2025-10-12
+## [2.0.0] - 2025-10-14
 
-### 🚀 Major Features
+### 🎉 Major Release: PLAN/SPEC/EXECUTE Workflow
 
-#### ULI and Slug System
-- **Globally Unique IDs**: Implemented ULID-based ULI (Universally Unique Lexicographically Sortable Identifier) system
-- **Human-Readable Slugs**: Added slug generation from titles for better file discovery
-- **Time-Sortable**: ULIs are chronologically sortable by creation time
-- **Collision Resolution**: Deterministic `-2`, `-3` suffix handling for duplicate slugs
-- **Performance**: O(1) cached lookups with JSONL index
+This release introduces a complete workflow overhaul, moving from simple task management to a sophisticated PLAN → SPEC → EXECUTE state machine with orchestration.
 
-#### Folder Visibility
-- **Visible by Default**: Uses `ai_docs/` folder for IDE visibility
-- **IDE Autocomplete**: Works perfectly with `ai_docs/tasks/T-` and `ai_docs/plans/P-`
+### Added
 
-### ✨ New Features
-- Added `uli.py` module for ULI generation and validation
-- Added `slug.py` module for Unicode-safe slug generation
-- Added `index_manager.py` for thread-safe index operations
-- Enhanced `id_alloc.py` with filename deduplication
-- Comprehensive Pydantic v2 models for all data structures
-- 35+ unit tests with 100% coverage on critical paths
+#### Core Features
+- **PLAN/SPEC/EXECUTE Workflow**: Complete state machine implementation
+  - PLANs define high-level objectives
+  - SPECs provide detailed technical specifications
+  - EXECUTE tracks implementation progress
+- **Orchestrator Function**: Automated PLAN → SPEC workflow progression
+  - `orchestrator_plans()` creates SPECs from ready PLANs
+  - Idempotent operation prevents duplicate SPECs
+  - State transitions tracked automatically
+- **Natural Language Interface**: Intuitive command routing
+  - `otk-new "implement auth system"` → Creates PLAN
+  - `otk-new "spec for plan-123"` → Creates SPEC
+  - `otk-new "execute spec-456"` → Creates execution log
+  - `otk-new "ready plan-789"` → Marks PLAN as ready
 
-### 🔧 Improvements
-- Settings now support configurable `docs_folder` (default: `ai_docs`)
-- Settings support configurable `slug_max_length` (10-100 chars, default 60)
-- Settings support configurable `index_dir` (default: `claude/`)
-- Added migration models in `models/migration.py`
-- Added identifier models in `models/identifiers.py`
+#### New Commands
+- **Clean CLI Subcommands**:
+  - `otk plan [title] [--ready]` - Create PLANs
+  - `otk spec [title] [--plan ID]` - Create SPECs
+  - `otk exec [spec-id]` - Execute SPECs
+  - `otk scout [spec-id]` - Generate implementation checklist
+  - `otk orchestrate` - Run PLAN → SPEC automation
+- **Owner Management**:
+  - `otk owner who` - Show owner resolution chain
+  - `otk owner set <name>` - Set persistent owner
+- **ULID-Based IDs**: Sortable, unique identifiers
+  - Format: `TYPE-YYYYMMDD-ULID6-slug`
+  - Example: `PLAN-20251014-01K7FM-auth-system`
 
-### 📦 Dependencies
-- Added `ulid-py>=1.1,<2` for ULID generation
-- Added `filelock>=3.0,<4` for thread-safe file operations
-- Updated to `pydantic-settings>=2.3,<3`
+#### Infrastructure
+- **Generic Hook System**: Simplified state transition hooks
+  - `fire_hook()` replaces per-event methods
+  - 3-second timeout with 2 retries
+  - Non-blocking with jittered backoff
+- **Enhanced Owner Resolution**: Clear hierarchy
+  1. Environment: `OTK_OWNER`
+  2. File: `.otk/.owner`
+  3. Git: `user.name`
+  4. System: Current user
+- **Comprehensive Testing**:
+  - 195 tests passing
+  - Golden tests for phrase router
+  - Integration tests for orchestrator
+  - State machine validation
 
-### 🔧 Configuration
+### Changed
 
-**Environment Variables**:
-```bash
-# Customize artifact folder (default: ai_docs)
-export OTK_ARTIFACT_ROOT=my_docs
+#### Workflow Changes
+- **Tasks → PLANs**: Tasks now create PLANs (backward compatible)
+- **ID Format**: Moved from numeric (T-001) to ULID-based
+- **Template System**: Templates now support variable status
+- **Directory Structure**:
+  ```
+  ai_docs/
+  ├── plans/     # PLAN documents
+  ├── specs/     # SPEC documents
+  ├── exec_logs/ # Execution tracking
+  └── scout_reports/ # Implementation checklists
+  ```
 
-# Customize slug length (default: 60)
-export OTK_SLUG_MAXLEN=80
+#### API Changes
+- `OrchSettings` now includes `specs_dir` and `exec_logs_dir`
+- `phrase_router` handles READY command for state transitions
+- Hook system simplified to generic `fire_hook()` function
 
-# Customize index location (default: claude/)
-export OTK_INDEX_DIR=index/
+### Fixed
+- Template status field now properly uses `${STATUS}` variable
+- Owner resolution order corrected (file overrides git)
+- Idempotency guaranteed through `spec_id` field in PLANs
+
+### Migration Guide
+
+#### From v1.x to v2.0
+
+1. **Existing Tasks Continue Working**
+   - Legacy T-XXX format still supported
+   - `task-new` command remains available
+   - `orchestrator-once` creates PLANs from tasks
+
+2. **Adopt New Workflow Gradually**
+   ```bash
+   # Old way (still works)
+   otk task-new "Implement feature"
+
+   # New way (recommended)
+   otk plan "Implement feature"
+   otk orchestrate  # Auto-creates SPEC when ready
+   otk exec SPEC-xxx  # Track execution
+   ```
+
+3. **Update Scripts**
+   - Replace `otk-task-new` with `otk plan`
+   - Use `otk-new` for natural language interface
+   - Add `otk scout` for implementation guidance
+
+### Technical Details
+
+#### State Transitions
+```
+PLAN: draft → ready → in-spec → executing → done
+SPEC: draft → designed → built → done
 ```
 
-### 🐛 Bug Fixes
-- Fixed IDE autocomplete not working with hidden folders
-- Fixed file discovery issues in various tools
-- Improved error handling in settings resolution
+#### Idempotency Guarantees
+- PLANs with `spec_id` set won't get duplicate SPECs
+- Orchestrator is safe to run multiple times
+- Atomic writes ensure consistency
 
-### 📚 Documentation
-- Added comprehensive architecture documentation
-- Updated README with new folder structure
-- Added migration guides and rollback procedures
-- Documented all Pydantic models
-
-### 🧪 Testing
-- Added 35 comprehensive tests for ULI/slug system
-- Full test coverage for migration scenarios
-- Performance benchmarks for index operations
-
-
-### 🙏 Acknowledgments
-- Thanks to Chad for the comprehensive integration plans
-- Thanks to Alex for driving the v2.0 roadmap
+#### Performance
+- Parallel tool execution support
+- Efficient batch operations
+- Smart routing with priority hierarchy
 
 ---
 
 ## [1.0.1] - 2025-10-12
 
-### Added
-- PyPI Test package support
-- Comprehensive installation test script
-- Example usage documentation
-
 ### Fixed
-- Package metadata for PyPI
-- Installation instructions
+- Documentation updates and clarifications
+- Minor bug fixes in task generation
 
-## [1.0.0] - 2025-10-11
+### Added
+- Improved error messages for better debugging
+- Enhanced test coverage
 
-### Initial Release
-- Core task and plan management system
-- CLI commands: `task-new`, `plan-new`, `orchestrator-once`
-- Pydantic-based settings management
-- Integration hooks for Mem0 and Archon
-- Comprehensive documentation
+## [1.0.0] - 2025-10-12
+
+### Added
+- Initial release of Orchestrator Toolkit
+- Basic task management system
+- Task to plan orchestration
+- Integration with Archon and Mem0 services
+- Command-line interface with multiple entry points
+- Settings management with environment variable support
+
+### Features
+- Task creation and tracking
+- Automatic plan generation from tasks
+- Owner resolution system
+- Atomic file operations for data integrity
+- Extensible adapter system for external services
 
 ---
 
-For more details, see the [GitHub releases](https://github.com/arkaigrowth/orchestrator_toolkit_1.0/releases).
+For detailed documentation, see the [README](README.md) and the [docs](docs/) directory.

@@ -50,10 +50,17 @@ Repository = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0"
 Issues = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0/issues"
 
 [project.scripts]
+# New unified CLI commands
+otk = "orchestrator_toolkit.cli:main"
+otk-new = "orchestrator_toolkit.cli_new:main"
+otk-plan-new = "orchestrator_toolkit.cli_new:plan_new_direct"
+otk-spec-new = "orchestrator_toolkit.cli_new:spec_new_direct"
+otk-exec = "orchestrator_toolkit.cli_new:exec_direct"
+
 # Primary entry points using Python scripts
 otk-task-new = "orchestrator_toolkit.scripts.task_new:main"
-otk-plan-new = "orchestrator_toolkit.scripts.plan_new:main"
 orchestrator-once = "orchestrator_toolkit.cli:orchestrator_once"
+
 # Backward compatibility aliases
 task-new = "orchestrator_toolkit.scripts.task_new:main"
 plan-new = "orchestrator_toolkit.scripts.plan_new:main"
