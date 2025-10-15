@@ -42,7 +42,30 @@ def new_ulid6() -> str:
     return (ulid_str[:4] + ulid_str[10:12]).upper()
 
 
-def slugify(title: str, max_len: int = 36) -> str:
+def choose_ulid6_unique(dir_path: Path, prefix: str, day: str, slug: str) -> str:
+    """
+    Generate a unique ULID6 that doesn't collide with existing files.
+
+    Checks directory for existing files matching the pattern and regenerates
+    ULID6 if collision detected (extremely rare with monotonic ULIDs).
+
+    Args:
+        dir_path: Directory to check for collisions
+        prefix: File prefix (e.g., "PLAN", "SPEC")
+        day: Date string in YYYYMMDD format
+        slug: Slugified title
+
+    Returns:
+        6-character ULID6 string guaranteed unique in directory
+    """
+    while True:
+        u6 = new_ulid6()
+        pattern = f"{prefix}-{day}-{u6}-"
+        if not any(p.name.startswith(pattern) for p in dir_path.glob(f"{prefix}-{day}-*-*.md")):
+            return u6
+
+
+def slugify(title: str, max_len: int = 60) -> str:
     """
     Convert a title to a URL-safe slug.
 
@@ -50,13 +73,13 @@ def slugify(title: str, max_len: int = 36) -> str:
     - Lowercase only
     - Keep a-z, 0-9, and hyphens
     - Collapse whitespace/punctuation to single hyphen
-    - Truncate to max_len (default 36 for TYPE-YYYYMMDD-ULID6- prefix)
+    - Truncate to max_len (default 60 for path portability)
     - Strip leading/trailing hyphens
     - Default to 'untitled' if empty
 
     Args:
         title: The title to slugify
-        max_len: Maximum length of slug (default: 36)
+        max_len: Maximum length of slug (default: 60)
 
     Returns:
         URL-safe slug string

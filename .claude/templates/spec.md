@@ -5,6 +5,7 @@ owner: ${OWNER}
 plan: ${PLAN_ID}
 created: ${DATE}
 status: draft
+design_ok: false
 ---
 
 # ${ID}: ${TITLE}

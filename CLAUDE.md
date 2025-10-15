@@ -110,5 +110,59 @@ These map to local commands:
 
 ---
 
+## Agents (personas)
+
+### Spec Author (ephemeral)
+
+**Location:** `./.claude/agents/spec_author.md`
+
+**Purpose:** Converts a ready PLAN into a strict SPEC with implementation steps.
+
+**Inputs:** PLAN with `status: ready`
+
+**Outputs:** SPEC file with frontmatter: `status: draft`, `design_ok: false`, `plan_id: <PLAN-ID>`
+
+**Logging:** Calls `scripts/log_action.py agent.spec_author.wrote spec_id=... plan_id=...`
+
+### Scout (ephemeral)
+
+**Location:** `./.claude/agents/scout.md`
+
+**Purpose:** Quality gate review - validates PLANs and SPECs before progression.
+
+**Modes:**
+
+- **PLAN Review:** Sets `status: ready` if no blockers (allows SPEC generation)
+- **SPEC Review:** Sets `design_ok: true` if acceptance criteria met (allows implementation)
+
+**Outputs:** Scout report in `ai_docs/scout_reports/`
+
+**Logging:** Calls `scripts/log_action.py agent.scout.{plan_ready|spec_review} ...`
+
+### Workflow Gates
+
+```text
+PLAN (draft) → Scout Review → status: ready → Spec Author → SPEC (draft, design_ok: false)
+                                                                ↓
+                                              Scout Review → design_ok: true → Implementation
+```
+
+**Gate Rules:**
+
+- `otk orchestrate` only processes PLANs with `status: ready` AND `spec_id: ""`
+- Implementation should only proceed when SPEC has `design_ok: true`
+- Scout sets both gates after validation (idempotent, safe to re-run)
+
+### Audit Logging
+
+All agent actions logged to:
+
+- `ai_docs/exec_logs/otk_exec.jsonl` (structured JSONL)
+- `ai_docs/exec_logs/EXEC-YYYYMMDD.md` (human-readable)
+
+Script: `scripts/log_action.py <event> [key=value ...]`
+
+---
+
 ✅ *Last updated: 2025-10-12 (PLAN/SPEC/EXEC MVP initialized)*
 Maintainers: **alexkamysz / Coach Chad**

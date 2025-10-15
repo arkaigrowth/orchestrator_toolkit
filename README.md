@@ -1,6 +1,6 @@
 # 🎯 Orchestrator Toolkit
 
-[![PyPI](https://img.shields.io/badge/PyPI-v2.0.2-blue)](https://pypi.org/project/orchestrator-toolkit/)
+[![PyPI](https://img.shields.io/badge/PyPI-v2.1.0-blue)](https://pypi.org/project/orchestrator-toolkit/)
 [![Python](https://img.shields.io/badge/python-≥3.10-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -141,6 +141,7 @@ title: JWT Token Middleware Implementation
 owner: YourName
 created: 2025-10-14T02:15:30Z
 status: draft          # draft|designed|built|done
+design_ok: false       # Scout sets to true after review
 ---
 
 ## Objective
@@ -168,14 +169,19 @@ Implement technical solution for: Add JWT authentication with OAuth 2.0 support
 
 **Why this matters**: Template filled by you or Claude with specific technical details.
 
-### Step 3: Get Implementation Checklist
+### Step 3: Scout Validation (Quality Gates)
+
+The Scout agent validates work before progression:
 
 ```bash
-$ otk scout SPEC-20251014-01K7JE
+# Validate PLAN before generating SPEC
+$ otk scout PLAN-20251014-01K7A2
+✅ Scout promoted PLAN to status: ready
 
-🔍 Scouting: SPEC-20251014-01K7JE-implementation-for-jwt.md
-   Found 8 implementation tasks
-✅ Scout report saved: ai_docs/scout_reports/SPEC-...-scout.md
+# Validate SPEC before implementation
+$ otk scout SPEC-20251014-01K7JE
+✅ Scout approved SPEC with design_ok: true
+📝 Report: ai_docs/scout_reports/SCOUT-...-review.md
 
 📋 Summary:
    - Development: 1 tasks
@@ -648,7 +654,7 @@ A: Check that your PLAN has `status: ready` AND `spec_id: ""`. Then run `otk orc
 ## Links
 
 - **📦 PyPI**: https://pypi.org/project/orchestrator-toolkit/
-- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.0.2/
+- **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.1.0/
 - **💻 GitHub**: https://github.com/arkaigrowth/orchestrator_toolkit
 - **📖 Changelog**: [CHANGELOG.md](CHANGELOG.md)
 - **🤝 Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
@@ -659,6 +665,6 @@ MIT License - see [LICENSE](LICENSE)
 
 ---
 
-**Version 2.0.2** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
+**Version 2.1.0** • Built for [Claude Code](https://claude.ai) • Powered by [Pydantic v2](https://pydantic.dev)
 
 **Stop losing track. Start shipping.** 🚀

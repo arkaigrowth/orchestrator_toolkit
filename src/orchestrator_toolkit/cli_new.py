@@ -86,6 +86,7 @@ def create_spec_file(title: str, owner: str, plan_id_ref: Optional[str] = None) 
         "plan: ${PLAN_ID}\n"
         "created: ${DATE}\n"
         "status: draft\n"
+        "design_ok: false\n"
         "---\n\n"
         "## Objective\n\n${TITLE}\n\n"
         "## Approach\n\n- [ ] Step 1\n- [ ] Step 2\n- [ ] Step 3\n\n"

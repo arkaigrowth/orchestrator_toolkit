@@ -58,6 +58,7 @@ owner: {owner}
 plan: {plan_id}
 created: {now}
 status: draft
+design_ok: false
 ---
 
 # {spec_id}: {title}
@@ -195,8 +196,26 @@ def orchestrator_plans() -> int:
 
     created = 0
 
-    # Scan all PLAN files
-    for plan_path in sorted(s.plans_dir.glob("PLAN-*.md")):
+    # Scan all PLAN files (resilient discovery with bounded fallback)
+    MAX_DISCOVERY_FILES = 500
+    all_md_files = list(s.plans_dir.glob("*.md"))
+
+    if len(all_md_files) > MAX_DISCOVERY_FILES:
+        _log_orchestration(s, f"Large directory ({len(all_md_files)} files); limiting to standard filenames")
+        plans_to_check = sorted(s.plans_dir.glob("PLAN-*.md"))
+    else:
+        # Include standard + non-standard with status:ready
+        standard_plans = list(s.plans_dir.glob("PLAN-*.md"))
+        non_standard = [p for p in all_md_files if not p.name.startswith("PLAN-")]
+
+        plans_to_check = sorted(standard_plans)
+        for ns_path in sorted(non_standard):
+            ns_plan = _parse_plan(ns_path)
+            if ns_plan and ns_plan["status"] == "ready":
+                _log_orchestration(s, f"Including non-standard PLAN filename: {ns_path.name}")
+                plans_to_check.append(ns_path)
+
+    for plan_path in plans_to_check:
         plan = _parse_plan(plan_path)
         if not plan:
             continue
@@ -245,6 +264,15 @@ def orchestrator_plans() -> int:
 
         created += 1
         print(f"Created: {spec_path}")
+
+    # TODO: Implementation Gate
+    # When implementation phase is built, enforce design_ok gate:
+    # for spec_path in s.specs_dir.glob("SPEC-*.md"):
+    #     spec = _parse_spec(spec_path)
+    #     if spec and spec["design_ok"] is True:
+    #         proceed_to_implementation(spec)
+    #     else:
+    #         log(f"SPEC {spec['id']} not design_ok:true; implementation gated")
 
     return created
 
