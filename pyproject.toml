@@ -43,6 +43,12 @@ dependencies = [
     "filelock>=3.0,<4",
 ]
 
+[tool.pytest.ini_options]
+# src/ layout: make the in-repo package importable when running the suite
+# from a fresh clone without requiring an editable install first.
+pythonpath = ["src"]
+testpaths = ["tests"]
+
 [project.urls]
 Homepage = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0"
 Documentation = "https://github.com/arkaigrowth/orchestrator_toolkit_1.0#readme"

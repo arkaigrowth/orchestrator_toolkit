@@ -25,11 +25,15 @@ def reset_cache():
 
 
 @pytest.fixture
-def mock_no_cache_file(monkeypatch):
-    """Mock .otk/.owner to not exist for clean testing."""
-    def mock_exists(self):
-        return False
-    monkeypatch.setattr(Path, 'exists', mock_exists)
+def mock_no_cache_file(monkeypatch, tmp_path):
+    """Run each test in an isolated working directory.
+
+    resolve_owner() reads and writes a per-repo .otk/.owner cache relative to
+    the current directory. Running in a fresh tmp cwd means that cache neither
+    pre-exists (so the cascade falls through as intended) nor leaks into the
+    real repo or sibling tests.
+    """
+    monkeypatch.chdir(tmp_path)
 
 
 class TestResolveOwner:
@@ -68,7 +72,9 @@ class TestResolveOwner:
         with patch('subprocess.check_output') as mock_git:
             mock_git.return_value = ''
 
-            with patch('builtins.input', return_value='charlie'):
+            # resolve_owner() prefers click.prompt (with an input() fallback),
+            # so the interactive answer must be simulated at click.prompt.
+            with patch('click.prompt', return_value='charlie'):
                 assert resolve_owner() == 'charlie'
 
     def test_cascade_git_config_fails(self, monkeypatch, mock_no_cache_file):
@@ -80,7 +86,7 @@ class TestResolveOwner:
         with patch('subprocess.check_output') as mock_git:
             mock_git.side_effect = subprocess.CalledProcessError(1, 'git')
 
-            with patch('builtins.input', return_value='dave'):
+            with patch('click.prompt', return_value='dave'):
                 assert resolve_owner() == 'dave'
 
     def test_cascade_prompt_default(self, monkeypatch, mock_no_cache_file):
@@ -92,7 +98,8 @@ class TestResolveOwner:
         with patch('subprocess.check_output') as mock_git:
             mock_git.return_value = ''
 
-            with patch('builtins.input', return_value=''):
+            # An empty answer at the prompt resolves to the "unknown" default.
+            with patch('click.prompt', return_value='unknown'):
                 assert resolve_owner() == 'unknown'
 
     @pytest.mark.skip(reason="KeyboardInterrupt test causes pytest issues")
@@ -111,8 +118,10 @@ class TestResolveOwner:
         with patch('subprocess.check_output') as mock_git:
             mock_git.side_effect = Exception("Git not available")
 
-            with patch('builtins.input', side_effect=Exception("No input")):
-                assert resolve_owner() == 'unknown'
+            # Both prompt mechanisms fail -> the final fallback is "unknown".
+            with patch('click.prompt', side_effect=Exception("No prompt")):
+                with patch('builtins.input', side_effect=Exception("No input")):
+                    assert resolve_owner() == 'unknown'
 
 
 class TestExtractTitleFromFrontmatter:
@@ -300,47 +309,34 @@ class TestPickSpecInteractively:
         captured = capsys.readouterr()
         assert "No specs directory found" in captured.out
 
-    def test_pick_spec_empty_directory(self, tmp_path, capsys):
+    def test_pick_spec_empty_directory(self, tmp_path, monkeypatch, capsys):
         """Handle empty specs directory."""
-        specs_dir = tmp_path / "specs"
-        specs_dir.mkdir()
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "ai_docs" / "specs").mkdir(parents=True)
 
-        with patch('pathlib.Path', return_value=specs_dir):
-            with patch.object(Path, 'exists', return_value=True):
-                with patch.object(Path, 'glob', return_value=[]):
-                    result = pick_spec_interactively()
-                    assert result is None
+        result = pick_spec_interactively()
+        assert result is None
 
-    def test_pick_spec_valid_selection(self, tmp_path, capsys):
+    def test_pick_spec_valid_selection(self, tmp_path, monkeypatch, capsys):
         """Select a spec successfully."""
-        specs_dir = tmp_path / "specs"
-        specs_dir.mkdir()
+        monkeypatch.chdir(tmp_path)
+        specs_dir = tmp_path / "ai_docs" / "specs"
+        specs_dir.mkdir(parents=True)
 
-        # Create test specs
-        spec1 = specs_dir / "SPEC-20251013-01T6N8-first.md"
-        spec1.write_text("""---
-id: SPEC-20251013-01T6N8
-title: First Spec
----
-""")
+        # Create test specs (pick_spec_interactively reads ai_docs/specs
+        # relative to the current directory)
+        (specs_dir / "SPEC-20251013-01T6N8-first.md").write_text(
+            "---\nid: SPEC-20251013-01T6N8\ntitle: First Spec\n---\n"
+        )
+        (specs_dir / "SPEC-20251013-02NZ6Q-second.md").write_text(
+            "---\nid: SPEC-20251013-02NZ6Q\ntitle: Second Spec\n---\n"
+        )
 
-        spec2 = specs_dir / "SPEC-20251013-02NZ6Q-second.md"
-        spec2.write_text("""---
-id: SPEC-20251013-02NZ6Q
-title: Second Spec
----
-""")
+        with patch('builtins.input', return_value='1'):
+            result = pick_spec_interactively()
 
-        with patch('pathlib.Path') as mock_path:
-            mock_specs_dir = MagicMock()
-            mock_specs_dir.exists.return_value = True
-            mock_specs_dir.glob.return_value = sorted([spec1, spec2])
-            mock_path.return_value = mock_specs_dir
-
-            with patch('builtins.input', return_value='1'):
-                result = pick_spec_interactively()
-                # Note: result will be based on mock, so just check it's not None
-                # In real usage, this would return the spec ID
+        # Selecting "1" returns the stem of the first spec (sorted by name)
+        assert result == "SPEC-20251013-01T6N8-first"
 
 
 class TestClearOwnerCache:
