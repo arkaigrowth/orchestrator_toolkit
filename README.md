@@ -1,6 +1,5 @@
 # 🎯 Orchestrator Toolkit
 
-[![PyPI](https://img.shields.io/badge/PyPI-v2.1.0-blue)](https://pypi.org/project/orchestrator-toolkit/)
 [![Python](https://img.shields.io/badge/python-≥3.10-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -25,7 +24,7 @@ Three simple concepts. Zero configuration. Works with Claude Code automatically.
 ### Natural Language (Recommended)
 
 ```bash
-pip install orchestrator-toolkit
+pip install git+https://github.com/arkaigrowth/orchestrator_toolkit.git
 
 # Just say what you want
 otk-new "plan 'Add user authentication' and mark it ready"
@@ -365,11 +364,11 @@ otk orchestrate  # Creates new SPEC
 ## Installation
 
 ```bash
-# Standard installation
-pip install orchestrator-toolkit
+# Standard installation (from source; not yet published to PyPI)
+pip install git+https://github.com/arkaigrowth/orchestrator_toolkit.git
 
 # CLI-only (isolated, no project pollution)
-pipx install orchestrator-toolkit
+pipx install git+https://github.com/arkaigrowth/orchestrator_toolkit.git
 
 # From TestPyPI (latest)
 pip install --index-url https://test.pypi.org/simple/ \
@@ -653,7 +652,6 @@ A: Check that your PLAN has `status: ready` AND `spec_id: ""`. Then run `otk orc
 
 ## Links
 
-- **📦 PyPI**: https://pypi.org/project/orchestrator-toolkit/
 - **🧪 TestPyPI**: https://test.pypi.org/project/orchestrator-toolkit/2.1.0/
 - **💻 GitHub**: https://github.com/arkaigrowth/orchestrator_toolkit
 - **📖 Changelog**: [CHANGELOG.md](CHANGELOG.md)
