@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **README Rewrite**: Complete user-first marketing approach
   - Leads with problem/solution (lost context → organized workflow)
   - Real authentication example with actual terminal output
-  - Highlights Claude Code integration as killer feature
+  - Highlights Claude Code integration as a core workflow feature
   - Common workflows: solo dev, with Claude, project continuity, multi-feature
   - Natural language interface examples
   - FAQ covering real user questions

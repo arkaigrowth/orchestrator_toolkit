@@ -23,7 +23,7 @@ Phase 1 analysis has been completed successfully. The migration from `.ai_docs` 
 ## Files Created in Phase 1
 
 ### 1. Migration Analysis Report
-**Location**: `/Users/alexkamysz/CascadeProjects/orchestrator_toolkit_1.0/migration_analysis.json`
+**Location**: `migration_analysis.json`
 
 Complete inventory of all `.ai_docs` references with:
 - Categorization by file type (Python, Shell, Markdown, Config, Logs)
@@ -33,7 +33,7 @@ Complete inventory of all `.ai_docs` references with:
 - Migration strategy recommendations
 
 ### 2. Pydantic Migration Models
-**Location**: `/Users/alexkamysz/CascadeProjects/orchestrator_toolkit_1.0/src/orchestrator_toolkit/models/migration.py`
+**Location**: `src/orchestrator_toolkit/models/migration.py`
 
 **Models Created**:
 - `FolderMigrationConfig`: Validates source/target paths and migration settings
@@ -48,7 +48,7 @@ Complete inventory of all `.ai_docs` references with:
 - Detailed tracking and logging
 
 ### 3. Enhanced Settings Configuration
-**Location**: `/Users/alexkamysz/CascadeProjects/orchestrator_toolkit_1.0/src/orchestrator_toolkit/settings.py`
+**Location**: `src/orchestrator_toolkit/settings.py`
 
 **Changes Made**:
 ```python
@@ -69,7 +69,7 @@ def resolve_paths(self, cwd: Optional[Path] = None) -> None:
 - Default: `ai_docs` (visible folder)
 
 ### 4. Migration Script
-**Location**: `/Users/alexkamysz/CascadeProjects/orchestrator_toolkit_1.0/scripts/migrate_docs_folder.py`
+**Location**: `scripts/migrate_docs_folder.py`
 
 **Features**:
 - ✅ Dry-run mode by default (safe testing)

@@ -1,4 +1,4 @@
-# CLAUDE.md — Orchestrator Toolkit 1.3
+# CLAUDE.md: Orchestrator Toolkit 1.3
 
 ## 🧭 Purpose
 
@@ -165,4 +165,4 @@ Script: `scripts/log_action.py <event> [key=value ...]`
 ---
 
 ✅ *Last updated: 2025-10-12 (PLAN/SPEC/EXEC MVP initialized)*
-Maintainers: **alexkamysz / Coach Chad**
+Maintainers: **arkaigrowth**

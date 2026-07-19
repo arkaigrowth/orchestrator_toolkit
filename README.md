@@ -77,7 +77,7 @@ AFTER orchestrate:
 └── SPEC: plan_id="PLAN-20251014-01K7A2", status=draft
 ```
 
-**Idempotency**: Safe to re-run `otk orchestrate`—won't create duplicates!
+**Idempotency**: Safe to re-run `otk orchestrate`, it won't create duplicates!
 
 **Status Flow**:
 ```
@@ -227,9 +227,9 @@ $ otk exec SPEC-20251014-01K7JE
 
 ---
 
-## 🤖 The Killer Feature: Works With Claude Code
+## 🤖 Built for Claude Code Workflows
 
-**Here's where it gets magical.** Claude becomes your deterministic project manager.
+Claude can drive this workflow directly as a deterministic project manager for your PLAN, SPEC, and EXECUTE files.
 
 ### Who Creates Plans?
 
@@ -259,7 +259,7 @@ Claude (runs these exact commands):
 2. otk orchestrate
    ✅ Created SPEC-20251014-01K7JE
    ✅ Updated PLAN: spec_id filled, status→in-spec
-   (Idempotent—safe to re-run if interrupted)
+   (Idempotent, safe to re-run if interrupted)
 
 3. otk scout SPEC-20251014-01K7JE
    ✅ Generated checklist: 8 tasks across 5 categories
@@ -290,8 +290,8 @@ Claude: *implements while updating the exec log*
 | Get implementation checklist | `otk-new "scout SPEC-xxx"` | `otk scout SPEC-xxx` | Either works |
 | Track execution | `otk-new "execute SPEC-xxx"` | `otk exec SPEC-xxx` | Either works |
 | Mark plan ready later | `otk-new "ready PLAN-xxx"` | Edit PLAN file: `status: ready` | **NL**: Quick<br>**Edit**: Batch changes |
-| See owner resolution | — | `otk owner who` | Debugging |
-| Set persistent owner | — | `otk owner set "Team Name"` | Multi-developer |
+| See owner resolution | N/A | `otk owner who` | Debugging |
+| Set persistent owner | N/A | `otk owner set "Team Name"` | Multi-developer |
 
 💡 **Pro Tip**: Use natural language for interactive work, CLI for automation.
 
@@ -554,7 +554,7 @@ otk plan "Title" --ready
 otk orchestrate
 ```
 
-**Remember**: `otk orchestrate` is idempotent—safe to run multiple times.
+**Remember**: `otk orchestrate` is idempotent, so it is safe to run multiple times.
 
 ### SPEC "disappeared"?
 

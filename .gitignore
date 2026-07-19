@@ -105,6 +105,7 @@ Pipfile.lock
 *.pid
 *.seed
 *.pid.lock
+run_log.md
 
 # Database
 *.db
@@ -114,6 +115,7 @@ Pipfile.lock
 # Backup files
 *.bak
 *.backup
+.claude/mcp.json.bak.*
 *~
 *.orig
 
