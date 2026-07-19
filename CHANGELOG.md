@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.2] - 2025-10-14
 
 ### Changed
-- **README Improvements**: Natural language first + state machine clarity (based on Chad's feedback)
+- **README Improvements**: Natural language first + state machine clarity (based on community feedback)
   - **Quick Start**: Natural language examples FIRST, CLI equivalents second
   - **State Machine Box**: Explicit idempotency rules with before/after visual
   - **Command Map**: NL ↔ CLI equivalents table with "when to use" guidance

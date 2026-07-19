@@ -50,6 +50,9 @@ plans/
 .claude/statusline.log
 *.tmp
 
+# OTK per-repo runtime cache (resolved owner name, not for distribution)
+.otk/.owner
+
 # IDEs
 .vscode/
 .idea/

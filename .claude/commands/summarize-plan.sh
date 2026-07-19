@@ -7,7 +7,7 @@ out="plans/${PID}.summary.md"
 if [[ ! -f "$in" ]]; then echo "Missing $in" >&2; exit 1; fi
 
 {
-  echo "# ${PID} — Ready for Review"
+  echo "# ${PID}: Ready for Review"
   echo
   echo "## Checklist"
   echo "- [ ] Gather documents"
